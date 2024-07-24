@@ -1,0 +1,24 @@
+#ifndef PARCEL_COMMANDS
+#define PARCEL_COMMANDS
+
+typedef enum {
+  HELP,
+  INSTALL,
+  UNINSTALL,
+  UPDATE,
+  UPGRADE,
+  LIST
+} CommandCode;
+
+typedef enum {
+  COMMAND_SUCCESS,
+  COMMAND_ERROR_GENERAL,
+  COMMAND_ERROR_INVALID_CONFIG,
+  COMMAND_ERROR_UNEXPECTED,
+  USER_CONTROL_C,
+  USER_CONTROL_BREAK
+} ExitCode;
+
+ExitCode helpCommand(); 
+
+#endif
