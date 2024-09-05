@@ -1,13 +1,33 @@
-CC = g++
-CFLAGS = -Wall -g
+CC := g++
+CFLAGS := -Wall -g -Wextra -std=c++17
 
-EXECUTABLE = parcel
-SOURCES = cli/cli.cpp core/*.cpp server/server.cpp server/api/*.cpp
-INCLUDE = -I cli/commands/ -I core/ -I server/
+BINPATH := bin
+OBJPATH := ${BINPATH}/objs
+SRCPATH := cli/*.cpp core/*.cpp server/*.cpp
+INCPATH := -I core/ -I cli/commands/ -I server/
 
-$(EXECUTABLE): $(SOURCES)
-	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(SOURCES) $(INCLUDE)
+SOURCES := $(wildcard $(SRCPATH))
+OBJECTS := $(patsubst %.cpp, $(OBJPATH)/%.o, $(notdir $(SOURCES)))
+
+EXECUTABLE := $(BINPATH)/parcel
+
+$(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(BINPATH)
+	$(CC) $(CFLAGS) $(INCPATH) $^ -o $@
+
+$(OBJPATH)/%.o: cli/%.cpp
+	@mkdir -p $(OBJPATH)
+	$(CC) $(CFLAGS) $(INCPATH) -c $< -o $@
+
+$(OBJPATH)/%.o: core/%.cpp
+	@mkdir -p $(OBJPATH)
+	$(CC) $(CFLAGS) $(INCPATH) -c $< -o $@
+
+$(OBJPATH)/%.o: server/%.cpp
+	@mkdir -p $(OBJPATH)
+	$(CC) $(CFLAGS) $(INCPATH) -c $< -o $@
+
+clean:
+	@rm -rf $(BINPATH)
 
 .PHONY: clean
-clean:
-	rm -rf $(EXECUTABLE)
