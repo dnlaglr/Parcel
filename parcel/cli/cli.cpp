@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "commands/helpCommand.h"
-#include "commands/installCommand.h"
+#include "commands/commands.h"
 
 int main(int argc, char* argv[]) {
   if (argc < 2) { std::cout << "Error: You must specify a command." << std::endl; }
