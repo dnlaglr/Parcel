@@ -5,6 +5,7 @@
 
 #include "../cmd/abstractCommand.h"
 #include "../cmd/helpCommand.h"
+#include "../cmd/installCommand.h"
 
 int main(int argc, char* argv[]) {
 #ifdef PARCEL_DEBUG
@@ -20,19 +21,23 @@ int main(int argc, char* argv[]) {
     std::transform(commandName.begin(), commandName.end(), commandName.begin(), ::tolower);
     
     std::unique_ptr<Parcel::AbstractCommand> command;
+    std::vector<std::string> args(argv + 2, argv + argc);
 
     if (commandName == "help") {
       command = std::make_unique<Parcel::HelpCommand>();
-
-      std::vector<std::string> args(argv + 1, argv + argc);
-      if (args.empty()) {
-        command->execute();
-      } else {
-        command->execute(args);
-      }
     } else if (commandName == "install") {
-      
+      command = std::make_unique<Parcel::InstallCommand>();
+    } else {
+      std::cerr << "[ Error ] Command not found. Use 'parcel help' to see a list of available commands." << std::endl;
+      return 1;
     }
+
+    if (args.empty()) {
+      command->execute();
+    } else {
+      command->execute(args);
+    }
+
   } else {
     std::cerr << "[ Error ] Must specify a command. Use 'parcel help' to see a list of available commands." << std::endl;
     return 1;
