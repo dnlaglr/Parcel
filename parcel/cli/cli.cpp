@@ -3,6 +3,7 @@
 #include <memory>
 #include <algorithm>
 
+#include "../parcel.h"
 #include "../cmd/abstractCommand.h"
 #include "../cmd/helpCommand.h"
 #include "../cmd/installCommand.h"
@@ -19,23 +20,23 @@ int main(int argc, char* argv[]) {
   if (argc >= 2) {
     std::string commandName(argv[1]);
     std::transform(commandName.begin(), commandName.end(), commandName.begin(), ::tolower);
-    
-    std::unique_ptr<Parcel::AbstractCommand> command;
+
+    std::unique_ptr<Parcel::Parcel> parcel = std::make_unique<Parcel::Parcel>();
     std::vector<std::string> args(argv + 2, argv + argc);
 
     if (commandName == "help") {
-      command = std::make_unique<Parcel::HelpCommand>();
+      parcel->command = std::make_unique<Parcel::HelpCommand>();
     } else if (commandName == "install") {
-      command = std::make_unique<Parcel::InstallCommand>();
+      parcel->command = std::make_unique<Parcel::InstallCommand>();
     } else {
       std::cerr << "[ Error ] Command not found. Use 'parcel help' to see a list of available commands." << std::endl;
       return 1;
     }
 
     if (args.empty()) {
-      command->execute();
+      parcel->command->execute();
     } else {
-      command->execute(args);
+      parcel->command->execute(args);
     }
 
   } else {
